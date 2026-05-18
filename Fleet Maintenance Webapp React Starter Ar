@@ -1,0 +1,682 @@
+/*
+طريقة تشغيل البرنامج:
+
+1- تثبيت Node.js
+https://nodejs.org
+
+2- إنشاء مشروع React:
+
+npx create-vite@latest fleet-system --template react
+
+3- الدخول للمجلد:
+
+cd fleet-system
+
+4- تثبيت Tailwind:
+
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+
+5- استبدال ملف App.jsx بهذا الكود.
+
+6- تشغيل البرنامج:
+
+npm install
+npm run dev
+
+7- فتح الرابط الذي يظهر في Terminal مثل:
+http://localhost:5173
+
+يمكن لاحقًا تحويله لبرنامج كامل بقاعدة بيانات وتسجيل دخول.
+
+====================================================
+نسخة تشغيل جاهزة بـ Docker
+====================================================
+
+1- تثبيت Docker:
+
+Ubuntu:
+
+sudo apt update
+sudo apt install docker.io docker-compose -y
+
+تشغيل الخدمة:
+
+sudo systemctl enable docker
+sudo systemctl start docker
+
+====================================================
+ملف Dockerfile
+====================================================
+
+أنشئ ملف باسم:
+Dockerfile
+
+وضع داخله:
+
+FROM node:20
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host"]
+
+====================================================
+ملف docker-compose.yml
+====================================================
+
+أنشئ ملف باسم:
+docker-compose.yml
+
+وضع داخله:
+
+version: '3'
+
+services:
+  fleet-system:
+    build: .
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+====================================================
+تشغيل البرنامج
+====================================================
+
+داخل مجلد المشروع نفذ:
+
+sudo docker-compose up --build
+
+بعدها افتح:
+
+http://localhost:5173
+
+أو من أي جهاز على الشبكة:
+
+http://IP-SERVER:5173
+
+====================================================
+تحويله لاحقًا لنسخة احترافية
+====================================================
+
+- إضافة MySQL
+- تسجيل دخول
+- صلاحيات مستخدمين
+- API Backend
+- تقارير PDF
+- رفع فواتير وصور
+- تنبيهات أوتوماتيك
+- نسخة موبايل
+- GPS
+
+====================================================
+النسخة الاحترافية الكاملة المقترحة
+====================================================
+
+Frontend:
+- React + Vite
+- TailwindCSS
+- Axios
+- React Router
+
+Backend:
+- Node.js + Express
+
+Database:
+- MySQL
+
+Authentication:
+- JWT Login System
+
+Modules:
+- إدارة السيارات
+- إدارة السائقين
+- الصيانة الدورية
+- حركة السيارات
+- الوقود
+- المصروفات
+- التقارير
+- التنبيهات
+- صلاحيات المستخدمين
+
+====================================================
+هيكل قاعدة البيانات
+====================================================
+
+جدول السيارات:
+
+CREATE TABLE vehicles (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  plate_number VARCHAR(50),
+  model VARCHAR(100),
+  brand VARCHAR(100),
+  manufacture_year INT,
+  chassis_number VARCHAR(100),
+  engine_number VARCHAR(100),
+  current_km INT,
+  fuel_type VARCHAR(50),
+  status VARCHAR(50),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+====================================================
+جدول الصيانة
+====================================================
+
+CREATE TABLE maintenance (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  vehicle_id INT,
+  maintenance_type VARCHAR(100),
+  maintenance_date DATE,
+  next_maintenance_date DATE,
+  km_at_maintenance INT,
+  cost DECIMAL(10,2),
+  notes TEXT,
+  FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
+);
+
+====================================================
+جدول حركة السيارات
+====================================================
+
+CREATE TABLE vehicle_movements (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  vehicle_id INT,
+  driver_name VARCHAR(100),
+  destination VARCHAR(255),
+  departure_time DATETIME,
+  return_time DATETIME,
+  departure_km INT,
+  return_km INT,
+  fuel_used DECIMAL(10,2),
+  notes TEXT,
+  FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
+);
+
+====================================================
+جدول المستخدمين
+====================================================
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100),
+  password VARCHAR(255),
+  role VARCHAR(50)
+);
+
+====================================================
+API Backend مثال
+====================================================
+
+app.get('/api/vehicles', async (req, res) => {
+  const [rows] = await db.query('SELECT * FROM vehicles');
+  res.json(rows);
+});
+
+====================================================
+مميزات النسخة الاحترافية
+====================================================
+
+- تسجيل دخول آمن
+- صلاحيات متعددة
+- تقارير PDF و Excel
+- نسخ احتياطي تلقائي
+- رفع صور وفواتير
+- Dashboard احترافية
+- إشعارات الصيانة
+- دعم الموبايل
+- تشغيل على السيرفر أو الشبكة الداخلية
+- جاهز للتحويل لتطبيق موبايل لاحقًا
+
+====================================================
+خطة التنفيذ الكاملة
+====================================================
+
+المرحلة 1:
+- بناء قاعدة البيانات
+- Backend API
+- شاشة تسجيل الدخول
+
+المرحلة 2:
+- إدارة السيارات والصيانة
+- التقارير
+- التنبيهات
+
+المرحلة 3:
+- رفع ملفات
+- صلاحيات متقدمة
+- نظام إشعارات
+- تحسين الأداء
+
+المرحلة 4:
+- تطبيق موبايل
+- GPS Tracking
+- QR Code لكل سيارة
+
+====================================================
+النسخة التنفيذية الفعلية للنظام
+====================================================
+
+اسم النظام:
+Fleet Management System
+
+====================================================
+بيانات تسجيل الدخول الافتراضية
+====================================================
+
+اسم المستخدم:
+admin
+
+كلمة المرور:
+admin123
+
+====================================================
+هيكل المشروع الكامل
+====================================================
+
+fleet-system/
+│
+├── frontend/
+│   ├── React
+│   ├── TailwindCSS
+│   └── Dashboard UI
+│
+├── backend/
+│   ├── Express Server
+│   ├── JWT Authentication
+│   ├── REST API
+│   └── File Uploads
+│
+├── database/
+│   └── MySQL Scripts
+│
+├── docker-compose.yml
+└── README.md
+
+====================================================
+إعداد قاعدة البيانات MySQL
+====================================================
+
+CREATE DATABASE fleet_management CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE fleet_management;
+
+====================================================
+جدول قطع الغيار
+====================================================
+
+CREATE TABLE spare_parts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  part_name VARCHAR(255),
+  quantity INT,
+  purchase_price DECIMAL(10,2),
+  supplier VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+====================================================
+جدول البطاريات
+====================================================
+
+CREATE TABLE batteries (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  vehicle_id INT,
+  brand VARCHAR(100),
+  install_date DATE,
+  expected_change_date DATE,
+  warranty_months INT,
+  notes TEXT,
+  FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
+);
+
+====================================================
+جدول الكاوتش
+====================================================
+
+CREATE TABLE tires (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  vehicle_id INT,
+  tire_brand VARCHAR(100),
+  install_date DATE,
+  current_km INT,
+  expected_change_km INT,
+  notes TEXT,
+  FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
+);
+
+====================================================
+Backend Server
+====================================================
+
+npm init -y
+
+npm install express mysql2 cors dotenv jsonwebtoken bcryptjs multer
+
+====================================================
+تشغيل Backend
+====================================================
+
+server.js
+
+const express = require('express');
+const cors = require('cors');
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.send('Fleet Management API Running');
+});
+
+app.listen(5000, () => {
+  console.log('Server running on port 5000');
+});
+
+====================================================
+تشغيل Frontend
+====================================================
+
+npm create vite@latest frontend -- --template react
+
+cd frontend
+
+npm install
+
+npm install axios react-router-dom
+
+npm run dev
+
+====================================================
+Docker Compose النهائي
+====================================================
+
+version: '3.9'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:5173"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fleet_management
+    ports:
+      - "3306:3306"
+
+====================================================
+تشغيل النظام بالكامل
+====================================================
+
+docker-compose up --build
+
+====================================================
+الدخول للنظام
+====================================================
+
+واجهة المستخدم:
+http://localhost:3000
+
+API Backend:
+http://localhost:5000
+
+====================================================
+التقارير المتاحة
+====================================================
+
+- تقرير صيانة السيارات
+- تقرير استهلاك الوقود
+- تقرير قطع الغيار
+- تقرير البطاريات
+- تقرير الكاوتش
+- تقرير حركة السيارات
+- تقرير المصروفات
+
+====================================================
+المميزات الاحترافية
+====================================================
+
+- واجهة عربية كاملة
+- تصميم Responsive
+- قاعدة بيانات حقيقية
+- Docker Deployment
+- نسخ احتياطي
+- صلاحيات مستخدمين
+- PDF Export
+- Excel Export
+- رفع صور وفواتير
+- تنبيهات انتهاء الصيانة
+- قابل للتطوير مستقبلاً
+
+
+
+*/
+
+export default function FleetMaintenanceApp() {
+  const stats = [
+    { title: 'إجمالي السيارات', value: 24 },
+    { title: 'سيارات بالصيانة', value: 3 },
+    { title: 'تنبيهات مهمة', value: 5 },
+    { title: 'مصروفات الشهر', value: '48,500 ج' },
+  ];
+
+  const vehicles = [
+    {
+      id: 1,
+      plate: 'ع س ر ١٢٣٤',
+      model: 'Toyota Corolla',
+      year: 2022,
+      km: 84500,
+      status: 'تعمل',
+    },
+    {
+      id: 2,
+      plate: 'ط ن ا ٥٦٧٨',
+      model: 'Hyundai Elantra',
+      year: 2021,
+      km: 112000,
+      status: 'صيانة',
+    },
+    {
+      id: 3,
+      plate: 'د ق م ٩٩٨٨',
+      model: 'Nissan Sunny',
+      year: 2020,
+      km: 134000,
+      status: 'تعمل',
+    },
+  ];
+
+  const maintenance = [
+    {
+      car: 'Toyota Corolla',
+      type: 'تغيير زيت',
+      date: '2026-05-15',
+      cost: '3500 ج',
+    },
+    {
+      car: 'Hyundai Elantra',
+      type: 'بطارية',
+      date: '2026-05-12',
+      cost: '5200 ج',
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-6" dir="rtl">
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-white rounded-3xl shadow-lg p-6 mb-6">
+          <h1 className="text-4xl font-bold mb-2">نظام إدارة وصيانة السيارات</h1>
+          <p className="text-gray-600">
+            متابعة السيارات والصيانة والحركة والمصروفات بشكل احترافي
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {stats.map((item, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-2xl shadow-md p-5 border border-gray-200"
+            >
+              <div className="text-gray-500 text-sm mb-2">{item.title}</div>
+              <div className="text-3xl font-bold">{item.value}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 bg-white rounded-3xl shadow-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold">السيارات</h2>
+              <button className="bg-black text-white px-4 py-2 rounded-xl hover:opacity-90">
+                إضافة سيارة
+              </button>
+            </div>
+
+            <div className="overflow-auto">
+              <table className="w-full text-right">
+                <thead>
+                  <tr className="border-b">
+                    <th className="p-3">رقم اللوحة</th>
+                    <th className="p-3">الموديل</th>
+                    <th className="p-3">السنة</th>
+                    <th className="p-3">العداد</th>
+                    <th className="p-3">الحالة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {vehicles.map((vehicle) => (
+                    <tr key={vehicle.id} className="border-b hover:bg-gray-50">
+                      <td className="p-3 font-medium">{vehicle.plate}</td>
+                      <td className="p-3">{vehicle.model}</td>
+                      <td className="p-3">{vehicle.year}</td>
+                      <td className="p-3">{vehicle.km.toLocaleString()} كم</td>
+                      <td className="p-3">
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm ${
+                            vehicle.status === 'تعمل'
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-red-100 text-red-700'
+                          }`}
+                        >
+                          {vehicle.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-lg p-6">
+            <h2 className="text-2xl font-bold mb-4">آخر الصيانات</h2>
+
+            <div className="space-y-4">
+              {maintenance.map((item, index) => (
+                <div
+                  key={index}
+                  className="border border-gray-200 rounded-2xl p-4"
+                >
+                  <div className="font-bold text-lg">{item.car}</div>
+                  <div className="text-gray-600 mt-1">{item.type}</div>
+                  <div className="text-gray-500 text-sm mt-2">
+                    {item.date}
+                  </div>
+                  <div className="mt-2 font-bold">{item.cost}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div className="bg-white rounded-3xl shadow-lg p-6">
+            <h2 className="text-2xl font-bold mb-4">التنبيهات</h2>
+
+            <ul className="space-y-3">
+              <li className="bg-yellow-100 p-4 rounded-xl">
+                تغيير زيت Toyota Corolla خلال 1200 كم
+              </li>
+              <li className="bg-red-100 p-4 rounded-xl">
+                انتهاء رخصة Nissan Sunny خلال 7 أيام
+              </li>
+              <li className="bg-blue-100 p-4 rounded-xl">
+                صيانة دورية مطلوبة لـ Hyundai Elantra
+              </li>
+            </ul>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-lg p-6">
+            <h2 className="text-2xl font-bold mb-4">الحركة اليومية</h2>
+
+            <div className="space-y-3">
+              <div className="border rounded-xl p-4">
+                <div className="font-bold">Toyota Corolla</div>
+                <div className="text-gray-600">خروج: 08:30 ص</div>
+                <div className="text-gray-600">الوجهة: القاهرة</div>
+              </div>
+
+              <div className="border rounded-xl p-4">
+                <div className="font-bold">Nissan Sunny</div>
+                <div className="text-gray-600">خروج: 10:15 ص</div>
+                <div className="text-gray-600">الوجهة: طنطا</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-3xl shadow-lg p-6 mt-6">
+          <h2 className="text-2xl font-bold mb-4">المرحلة القادمة</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="border rounded-2xl p-4">
+              <h3 className="font-bold text-lg mb-2">قاعدة البيانات</h3>
+              <p className="text-gray-600 text-sm">
+                ربط النظام بـ MySQL أو PostgreSQL
+              </p>
+            </div>
+
+            <div className="border rounded-2xl p-4">
+              <h3 className="font-bold text-lg mb-2">تسجيل دخول</h3>
+              <p className="text-gray-600 text-sm">
+                إضافة صلاحيات للمستخدمين والإدارة
+              </p>
+            </div>
+
+            <div className="border rounded-2xl p-4">
+              <h3 className="font-bold text-lg mb-2">تقارير</h3>
+              <p className="text-gray-600 text-sm">
+                تصدير Excel و PDF للتقارير والحسابات
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
